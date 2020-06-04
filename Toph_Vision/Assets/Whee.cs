@@ -33,7 +33,7 @@ public class Whee : MonoBehaviour
 		GlobalImpulse.offsets[GlobalImpulse.impulsePointsIndex] = Time.time;
 		GlobalImpulse.switches[GlobalImpulse.impulsePointsIndex] = 1;
 
-		StartCoroutine(DisableImpulse(GlobalImpulse.impulsePointsIndex, 20f));
+		StartCoroutine(DisableImpulse(GlobalImpulse.impulsePointsIndex));
 		GlobalImpulse.impulsePointsIndex = (GlobalImpulse.impulsePointsIndex + 1) % GlobalImpulse.impulsePoints.Length;
 
 		mat.SetVectorArray("_ImpulseArray", GlobalImpulse.impulsePoints);
@@ -57,7 +57,7 @@ public class Whee : MonoBehaviour
         }*/
     }
 
-    IEnumerator DisableImpulse(int index, float time=20f) {
+    IEnumerator DisableImpulse(int index, float time=7f) {
 		yield return new WaitForSeconds(time);
 		GlobalImpulse.switches[index] = 0f;
 		mat.SetFloatArray("_SwitchArray", GlobalImpulse.switches);

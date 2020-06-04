@@ -2,7 +2,7 @@
 
 // Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
 
-Shader "Unlit/NewUnlitShader"
+Shader "Unlit/SeismicSense"
 {
     Properties
     {
@@ -50,8 +50,10 @@ Shader "Unlit/NewUnlitShader"
                 UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
                 float1 distanceToPoint : TEXCOORD1;
-                fixed4 diffuse : COLOR0;
+                //fixed4 diffuse : COLOR0;
+                fixed4 lightDirection : COLOR0;
                 float4 distanceArray[10] : COLOR1;
+                float4 normal : NORMAL;
             };
 
             sampler2D _MainTex;
@@ -102,22 +104,20 @@ Shader "Unlit/NewUnlitShader"
                 }
                 o.distanceArray = distanceArray;
                 
-                float3 nHat = normalize(UnityObjectToWorldNormal(v.normal));
-                float3 lHat = normalize(_WorldSpaceLightPos0.xyz);
-                float diffuseValue = max(dot(nHat, lHat), 0.0);
-                o.diffuse = float4(diffuseValue, diffuseValue, diffuseValue, 1.0);
+                //o.diffuse = float4(diffuseValue, diffuseValue, diffuseValue, 1.0);
+                o.lightDirection = _WorldSpaceLightPos0;
+                o.normal = float4(UnityObjectToWorldNormal(v.normal).x, UnityObjectToWorldNormal(v.normal).y, UnityObjectToWorldNormal(v.normal).z, 1.0);
 
                 return o;
             }
 
             fixed4 frag (v2f i) : SV_Target
             {
-                //float distanceToPoint = i.distanceToPoint;
-                //float distanceToPoint = i.distanceArray[0].x;
 
                 // sample the texture
-                float4 col = tex2D(_MainTex, i.uv);
-                col = fixed4(0.0, 0.0, 0.0, 1.0);
+                float4 col = fixed4(0.0, 0.0, 0.0, 1.0);
+
+                float diffuse = float4(0.0, 0.0, 0.0, 0.0);
 
                 for(int n = 0; n < 10; n++) {
                     float points[4];
@@ -139,27 +139,38 @@ Shader "Unlit/NewUnlitShader"
 
                         float maxDistance = (_Time.y - myOffset) * _Speed;
                         float minDistance = ((_Time.y - myOffset) * _Speed) - _Wavelength;
-                        float val = cos(3.14159265359 * _Freq * (distanceToPoint - ((_Time.y - myOffset) * _Speed)));
-                        val = abs(fmod((distanceToPoint - ((_Time.y - myOffset) * _Speed)), _Wavelength / _Freq) * _Freq);
+                        float val = abs(fmod((distanceToPoint - ((_Time.y - myOffset) * _Speed)), _Wavelength / _Freq) * _Freq);
                         float r = _RingWidth * _Wavelength;
-                        if(val < r && _Switch == 1 && distanceToPoint < maxDistance && distanceToPoint > minDistance) {
-                            //col = fixed4(1.0, 1.0, 1.0, 1.0);
-                            float f = 1.0 - abs((val - (r / 2)) / r);
-                            for(int index = 0; index < _RingPower; index++) {
-                                f *= f;
+                        if(distanceToPoint < maxDistance) {
+                            if(val < r == 1 && distanceToPoint > minDistance) {
+                                float f = 1.0 - abs((val - (r / 2)) / r);
+                                for(int index = 0; index < _RingPower; index++) {
+                                    f *= f;
+                                }
+                                if(_UseFade == 1) {
+                                    f /= distanceToPoint / _FadeLength;
+                                }
+                                col += fixed4(f, f, f, 0.0);
                             }
-                            if(_UseFade == 1) {
-                                f /= distanceToPoint / _FadeLength;
-                            }
-                            col += fixed4(f, f, f, 0.0);
-                        } else {
-                            //col = fixed4(0.0, 0.0, 0.0, 1.0);
-                        }
 
+                            float diffuseAdd = abs((distanceToPoint - ((_Time.y - myOffset) * _Speed), 5 * _Wavelength / _Freq) * _Freq);
+                            float fadeGradient = 100.0;
+                            float fadeGradientOffset = 40.0;
+                            if(maxDistance + fadeGradientOffset - distanceToPoint < fadeGradient) {
+                                diffuseAdd *= (maxDistance - distanceToPoint) / fadeGradient;
+                            }
+                            float maxTime = 7.0;
+                            float fadeTime = 5.0;
+                            diffuse = min((fadeTime - (_Time.y - myOffset)) / maxTime, diffuse + diffuseAdd);
+                        }
                     }
                 }
 
-                //col = col + float4(i.diffuse.xyz, 0.0);
+                float3 nHat = normalize(i.normal + tex2D(_MainTex, i.uv));
+                float3 lHat = normalize(i.lightDirection);
+                float diffuseValue = max(dot(nHat, lHat), 0.0);
+                diffuseValue *= 0.2 * diffuse;
+                col = col + float4(diffuseValue, diffuseValue, diffuseValue, 0.0);
 
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
