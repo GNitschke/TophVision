@@ -8,33 +8,51 @@ public class ClickImpulse : MonoBehaviour
 	private Camera main;
 	private Transform camT;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        main = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-        camT = main.GetComponent<Transform>();
-    }
+	private Vector4[] impulsePoints;
+	private float[] offsets;
+	private float[] switches;
+	private int impulsePointsIndex = 0;
 
-    float timer = 0f;
+	// Start is called before the first frame update
+	void Start()
+	{
+		main = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+		camT = main.GetComponent<Transform>();
 
-    void Update()
-    {
-    	if(Input.GetMouseButtonDown(0)) {
-    		mat.SetFloat("_Offset", Time.time);
-    		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-    		Debug.Log(ray);
-    		RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 1000f)) {
-            	mat.SetVector("_ImpulsePoint", hit.point);
-            }
-    		timer = 5f;
-    	}
-        if(timer > 0) {
-        	mat.SetInt("_Switch", 1);
-        	//mat.SetFloat("_Wavelength", 10 * (5f - timer));
-        	timer -= Time.deltaTime;
-        } else {
-        	mat.SetInt("_Switch", 0);
-        }
-    }
+		impulsePoints = new Vector4[40];
+		offsets = new float[40];
+		switches = new float[40];
+		for(int i = 0; i < impulsePoints.Length; i++) {
+			impulsePoints[i] = new Vector4(0f, 0f, 0f, 0f);
+			offsets[i] = 0f;
+			switches[i] = 0;
+		}
+	}
+
+	void Update()
+	{
+		if(Input.GetMouseButtonDown(0)) {
+			mat.SetFloat("_Offset", Time.time);
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			RaycastHit hit;
+			if (Physics.Raycast(ray, out hit, 1000f)) {
+				impulsePoints[impulsePointsIndex] = new Vector4(hit.point.x, hit.point.y, hit.point.z, 1f);
+				offsets[impulsePointsIndex] = Time.time;
+				switches[impulsePointsIndex] = 1;
+				//int myIndex = impulsePointsIndex;
+				StartCoroutine(DisableImpulse(impulsePointsIndex, 20f));
+				impulsePointsIndex = (impulsePointsIndex + 1) % impulsePoints.Length;
+
+				mat.SetVectorArray("_ImpulseArray", impulsePoints);
+				mat.SetFloatArray("_OffsetArray", offsets);
+				mat.SetFloatArray("_SwitchArray", switches);
+			}
+		}
+	}
+
+	IEnumerator DisableImpulse(int index, float time=20f) {
+		yield return new WaitForSeconds(time);
+		switches[index] = 0f;
+		mat.SetFloatArray("_SwitchArray", switches);
+	}
 }
