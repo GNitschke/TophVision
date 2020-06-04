@@ -492,7 +492,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 402693572}
   m_LocalRotation: {x: -0.88923496, y: 0.033703957, z: -0.34437242, w: 0.2992204}
-  m_LocalPosition: {x: 6.83, y: 5.05, z: 2.22}
+  m_LocalPosition: {x: 5.3, y: 13.63, z: 8.04}
   m_LocalScale: {x: 20, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 0}
@@ -606,7 +606,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 4f096c5eb7fe68e4da026744cbaed5c1,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.66
+      value: -13.64
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 4f096c5eb7fe68e4da026744cbaed5c1,
         type: 3}
@@ -866,6 +866,7 @@ GameObject:
   - component: {fileID: 1320561472}
   - component: {fileID: 1320561475}
   - component: {fileID: 1320561476}
+  - component: {fileID: 1320561477}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -932,7 +933,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1320561471}
   m_LocalRotation: {x: 0.07767235, y: -0, z: -0, w: 0.99697894}
-  m_LocalPosition: {x: 0, y: 2.63, z: -10}
+  m_LocalPosition: {x: 4.75, y: 2.46, z: -8.91}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1009,6 +1010,21 @@ MonoBehaviour:
     m_RotationOrder: 4
   rotationLerpTime: 0.01
   invertY: 0
+--- !u!114 &1320561477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1320561471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 412bb6a8b7ac68b48b4001ec22c32e29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectile: {fileID: 7880763412596276782, guid: c44bdc1b3aa855243aacfdcae8022371,
+    type: 3}
+  strength: 1000
 --- !u!1 &1479064003 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -650722757169144853, guid: 6cb5a80e4700dbc44a357b3dc0b0bbfb,
@@ -1026,7 +1042,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 1
+  m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 2186430941476567602, guid: 6cb5a80e4700dbc44a357b3dc0b0bbfb, type: 3}
 --- !u!1 &1552392100 stripped
