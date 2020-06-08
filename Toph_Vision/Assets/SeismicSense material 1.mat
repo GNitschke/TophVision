@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SeismicSense material
+  m_Name: SeismicSense material 1
   m_Shader: {fileID: 4800000, guid: 3a417105f801e8d4dab37e1d777a1a41, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -67,10 +67,10 @@ Material:
     - _BumpScale: 1
     - _Cull: 2
     - _Cutoff: 0.5
-    - _DiffuseIntensity: 0.2
+    - _DiffuseIntensity: 0
     - _DstBlend: 0
     - _EnvironmentReflections: 1
-    - _FadeLength: 1
+    - _FadeLength: 0.1
     - _Freq: 3
     - _GlossMapScale: 0
     - _Glossiness: 0
@@ -80,8 +80,8 @@ Material:
     - _Offset: 7.917622
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _RingPower: 5
-    - _RingWidth: 0.3
+    - _RingPower: 3
+    - _RingWidth: 0.1
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -90,7 +90,7 @@ Material:
     - _Surface: 0
     - _Switch: 1
     - _UseDiffuse: 1
-    - _UseFade: 0
+    - _UseFade: 1
     - _Wavelength: 8
     - _WorkflowMode: 1
     - _ZWrite: 1

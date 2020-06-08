@@ -7,17 +7,20 @@ public class GlobalImpulse : MonoBehaviour
 
 	public static Vector4[] impulsePoints;
 	public static float[] offsets;
+	public static float[] speeds;
 	public static float[] switches;
 	public static int impulsePointsIndex = 0;
 
 	static GlobalImpulse() {
 		impulsePoints = new Vector4[40];
 		offsets = new float[40];
+		speeds = new float[40];
 		switches = new float[40];
 		for(int i = 0; i < impulsePoints.Length; i++) {
 			impulsePoints[i] = new Vector4(0f, 0f, 0f, 0f);
 			offsets[i] = 0f;
-			switches[i] = 0;
+			speeds[i] = 0f;
+			switches[i] = 0f;
 		}
 	}
 

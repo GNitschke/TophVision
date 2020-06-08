@@ -6,18 +6,19 @@ Shader "Unlit/SeismicSense"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
-        _ImpulsePoint ("Impulse Point", Vector) = (0, 0, 0)
+        _MainTex ("Normal Map", 2D) = "white" {}
+        //_ImpulsePoint ("Impulse Point", Vector) = (0, 0, 0)
         _Freq ("Frequencey", Range(0.001, 100)) = 3
         _Wavelength ("Wavelength", Float) = 1.0
         _RingWidth ("Ring Width", Range(0.0001, 1.0)) = 0.25
         _RingPower ("Ring Power", Int) = 2
-        _Amp ("Amplitude", Float) = 0.05
-        _Speed ("Speed", Float) = 5.0
+        //_Amp ("Amplitude", Float) = 0.05
+        //_Speed ("Speed", Float) = 5.0
         _FadeLength ("Fade Length", Float) = 10
-        _UseFade ("Use Fade", Int) = 1
-        _Switch ("Switch", Int) = 1
-        _Offset ("Offset", Float) = 0.0
+        _UseFade ("Use Fade", Int) = 0
+        _DiffuseIntensity ("Diffuse Glow Intensity", Range(0.0, 1.0)) = 0.2
+        //_Switch ("Switch", Int) = 1
+        //_Offset ("Offset", Float) = 0.0
     }
     SubShader
     {
@@ -67,12 +68,14 @@ Shader "Unlit/SeismicSense"
             float _Speed;
             float _FadeLength;
             int _UseFade;
+            float _DiffuseIntensity;
             int _Switch;
             float _Offset;
 
             float3 _ImpulseArray[40];
             float _SwitchArray[40];
             float _OffsetArray[40];
+            float _SpeedArray[40];
 
             v2f vert (appdata v)
             {
@@ -134,12 +137,13 @@ Shader "Unlit/SeismicSense"
                         }
 
                         float myOffset = _OffsetArray[myIndex];
+                        float mySpeed = _SpeedArray[myIndex];
 
                         float distanceToPoint = points[m];
 
-                        float maxDistance = (_Time.y - myOffset) * _Speed;
-                        float minDistance = ((_Time.y - myOffset) * _Speed) - _Wavelength;
-                        float val = abs(fmod((distanceToPoint - ((_Time.y - myOffset) * _Speed)), _Wavelength / _Freq) * _Freq);
+                        float maxDistance = (_Time.y - myOffset) * mySpeed;
+                        float minDistance = ((_Time.y - myOffset) * mySpeed) - _Wavelength;
+                        float val = abs(fmod((distanceToPoint - ((_Time.y - myOffset) * mySpeed)), _Wavelength / _Freq) * _Freq);
                         float r = _RingWidth * _Wavelength;
                         if(distanceToPoint < maxDistance) {
                             if(val < r == 1 && distanceToPoint > minDistance) {
@@ -153,7 +157,7 @@ Shader "Unlit/SeismicSense"
                                 col += fixed4(f, f, f, 0.0);
                             }
 
-                            float diffuseAdd = abs((distanceToPoint - ((_Time.y - myOffset) * _Speed), 5 * _Wavelength / _Freq) * _Freq);
+                            float diffuseAdd = abs((distanceToPoint - ((_Time.y - myOffset) * mySpeed), 5 * _Wavelength / _Freq) * _Freq);
                             float fadeGradient = 100.0;
                             float fadeGradientOffset = 40.0;
                             if(maxDistance + fadeGradientOffset - distanceToPoint < fadeGradient) {
@@ -169,7 +173,7 @@ Shader "Unlit/SeismicSense"
                 float3 nHat = normalize(i.normal + tex2D(_MainTex, i.uv));
                 float3 lHat = normalize(i.lightDirection);
                 float diffuseValue = max(dot(nHat, lHat), 0.0);
-                diffuseValue *= 0.2 * diffuse;
+                diffuseValue *= _DiffuseIntensity * diffuse;
                 col = col + float4(diffuseValue, diffuseValue, diffuseValue, 0.0);
 
                 // apply fog

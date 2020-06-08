@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Whee : MonoBehaviour
 {
-    public Material mat;
+    public Material[] materials;
 
     /*private Vector4[] impulsePoints;
 	private float[] offsets;
@@ -29,16 +29,22 @@ public class Whee : MonoBehaviour
         print("Points colliding: " + other.contacts.Length);
         print("First normal of the point that collide: " + other.contacts[0].normal);
 
+        Debug.Log(other.relativeVelocity.magnitude);
+
         GlobalImpulse.impulsePoints[GlobalImpulse.impulsePointsIndex] = new Vector4(other.contacts[0].point.x, other.contacts[0].point.y, other.contacts[0].point.z, 1f);
 		GlobalImpulse.offsets[GlobalImpulse.impulsePointsIndex] = Time.time;
+		GlobalImpulse.speeds[GlobalImpulse.impulsePointsIndex] = 4f + (other.relativeVelocity.magnitude / 10f);
 		GlobalImpulse.switches[GlobalImpulse.impulsePointsIndex] = 1;
 
 		StartCoroutine(DisableImpulse(GlobalImpulse.impulsePointsIndex));
 		GlobalImpulse.impulsePointsIndex = (GlobalImpulse.impulsePointsIndex + 1) % GlobalImpulse.impulsePoints.Length;
 
-		mat.SetVectorArray("_ImpulseArray", GlobalImpulse.impulsePoints);
-		mat.SetFloatArray("_OffsetArray", GlobalImpulse.offsets);
-		mat.SetFloatArray("_SwitchArray", GlobalImpulse.switches);
+		foreach(Material mat in materials) {
+			mat.SetVectorArray("_ImpulseArray", GlobalImpulse.impulsePoints);
+			mat.SetFloatArray("_OffsetArray", GlobalImpulse.offsets);
+			mat.SetFloatArray("_SpeedArray", GlobalImpulse.speeds);
+			mat.SetFloatArray("_SwitchArray", GlobalImpulse.switches);
+		}
     }
 
     //float timer = 0f;
@@ -57,9 +63,11 @@ public class Whee : MonoBehaviour
         }*/
     }
 
-    IEnumerator DisableImpulse(int index, float time=7f) {
+    IEnumerator DisableImpulse(int index, float time=10f) {
 		yield return new WaitForSeconds(time);
 		GlobalImpulse.switches[index] = 0f;
-		mat.SetFloatArray("_SwitchArray", GlobalImpulse.switches);
+		foreach(Material mat in materials) {
+			mat.SetFloatArray("_SwitchArray", GlobalImpulse.switches);
+		}
 	}
 }
