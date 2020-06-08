@@ -13,6 +13,7 @@ public class Launch : MonoBehaviour
         {
             GameObject p = Instantiate(projectile, transform.position, projectile.transform.rotation);
             p.GetComponent<Rigidbody>().AddForce(transform.forward * strength);
+            p.AddComponent<ImpulseManager>();
         }
     }
 }

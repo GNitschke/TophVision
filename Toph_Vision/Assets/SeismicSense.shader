@@ -73,6 +73,7 @@ Shader "Unlit/SeismicSense"
             float3 _ImpulseArray[40];
             float _SwitchArray[40];
             float _OffsetArray[40];
+            float _SpeedArray[40];
 
             v2f vert (appdata v)
             {

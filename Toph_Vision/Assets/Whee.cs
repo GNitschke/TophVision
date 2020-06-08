@@ -8,6 +8,7 @@ public class Whee : MonoBehaviour
 
     /*private Vector4[] impulsePoints;
 	private float[] offsets;
+	public float[] speeds;
 	private float[] switches;
 	private int impulsePointsIndex = 0;*/
 
@@ -16,6 +17,7 @@ public class Whee : MonoBehaviour
     {
         /*impulsePoints = new Vector4[40];
 		offsets = new float[40];
+		speeds = new float[40];
 		switches = new float[40];
 		for(int i = 0; i < impulsePoints.Length; i++) {
 			impulsePoints[i] = new Vector4(0f, 0f, 0f, 0f);
@@ -24,7 +26,7 @@ public class Whee : MonoBehaviour
 		}*/
     }
 
-    void OnCollisionEnter(Collision other)
+    /*void OnCollisionEnter(Collision other)
     {
         print("Points colliding: " + other.contacts.Length);
         print("First normal of the point that collide: " + other.contacts[0].normal);
@@ -38,8 +40,9 @@ public class Whee : MonoBehaviour
 
 		mat.SetVectorArray("_ImpulseArray", GlobalImpulse.impulsePoints);
 		mat.SetFloatArray("_OffsetArray", GlobalImpulse.offsets);
+		mat.SetFloatArray("_SpeedArray", speeds);
 		mat.SetFloatArray("_SwitchArray", GlobalImpulse.switches);
-    }
+    }*/
 
     //float timer = 0f;
     private void Update()
@@ -57,9 +60,9 @@ public class Whee : MonoBehaviour
         }*/
     }
 
-    IEnumerator DisableImpulse(int index, float time=7f) {
+    /*IEnumerator DisableImpulse(int index, float time=7f) {
 		yield return new WaitForSeconds(time);
 		GlobalImpulse.switches[index] = 0f;
 		mat.SetFloatArray("_SwitchArray", GlobalImpulse.switches);
-	}
+	}*/
 }
