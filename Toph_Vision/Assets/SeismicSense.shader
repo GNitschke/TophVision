@@ -16,6 +16,8 @@ Shader "Unlit/SeismicSense"
         _DiffuseIntensity ("Diffuse Glow Intensity", Range(0.0, 1.0)) = 0.2
         _FadeGradient ("Glow Fade Gradient", Float) = 500.0
         _FadeOffset ("Glow Fade Offset", Float) = 40.0
+        _DarkerColor ("Darker Color", Color) = (0.0, 0.0, 0.0, 0.0)
+        _LighterColor ("Lighter Color", Color) = (1.0, 1.0, 1.0, 1.0)
     }
     SubShader
     {
@@ -47,10 +49,9 @@ Shader "Unlit/SeismicSense"
                 float2 uv : TEXCOORD0;
                 UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
-                float4 vw : COLOR11;
                 float1 distanceToPoint : TEXCOORD1;
                 fixed4 lightDirection : COLOR0;
-                float4 distanceArray[10] : COLOR1;
+                float4 vw : COLOR1;
                 float4 normal : NORMAL;
             };
 
@@ -71,10 +72,13 @@ Shader "Unlit/SeismicSense"
             float _FadeGradient;
             float _FadeOffset;
 
-            float3 _ImpulseArray[40];
-            float _SwitchArray[40];
-            float _OffsetArray[40];
-            float _SpeedArray[40];
+            float4 _DarkerColor;
+            float4 _LighterColor;
+
+            float3 _ImpulseArray[1000];
+            float _SwitchArray[1000];
+            float _OffsetArray[1000];
+            float _SpeedArray[1000];
 
             v2f vert (appdata v)
             {
@@ -87,21 +91,6 @@ Shader "Unlit/SeismicSense"
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.distanceToPoint = float1(dist);
                 UNITY_TRANSFER_FOG(o,o.vertex);
-
-                float4 distanceArray[10] = o.distanceArray;
-                for(int i = 0; i < 10; i++) {
-                    float points[4];
-                    for(int j = 0; j < 4; j++) {
-                        float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
-                        float distanceToPoint = distance(_ImpulseArray[(4 * i) + j], worldPos);
-                        points[j] = distanceToPoint;
-                    }
-                    distanceArray[i].x = points[0];
-                    distanceArray[i].y = points[1];
-                    distanceArray[i].z = points[2];
-                    distanceArray[i].w = points[3];
-                }
-                o.distanceArray = distanceArray;
                 
                 o.lightDirection = _WorldSpaceLightPos0;
                 o.normal = float4(UnityObjectToWorldNormal(v.normal).x, UnityObjectToWorldNormal(v.normal).y, UnityObjectToWorldNormal(v.normal).z, 1.0);
@@ -117,51 +106,43 @@ Shader "Unlit/SeismicSense"
 
                 float diffuse = float4(0.0, 0.0, 0.0, 0.0);
 
-                for(int n = 0; n < 10; n++) {
-                    float points[4];
-                    points[0] = i.distanceArray[n].x;
-                    points[1] = i.distanceArray[n].y;
-                    points[2] = i.distanceArray[n].z;
-                    points[3] = i.distanceArray[n].w;
+                for(int n = 0; n < 1000; n++) {
 
-                    for(int m = 0; m < 4; m++) {
+                    uint myIndex = n;
+                    if(_SwitchArray[myIndex] == 0.0) {
+                        continue;
+                    }
 
-                        uint myIndex = (4 * n) + m;
-                        if(_SwitchArray[myIndex] == 0.0) {
-                            continue;
+                    float myOffset = _OffsetArray[myIndex];
+                    float mySpeed = _SpeedArray[myIndex];
+
+                    float distanceToPoint = distance(_ImpulseArray[myIndex], i.vw);
+
+                    float maxDistance = (_Time.y - myOffset) * mySpeed;
+                    float minDistance = ((_Time.y - myOffset) * mySpeed) - _Wavelength;
+                    float val = abs(fmod((distanceToPoint - ((_Time.y - myOffset) * mySpeed)), _Wavelength / _Freq) * _Freq);
+                    float r = _RingWidth * _Wavelength;
+                    if(distanceToPoint < maxDistance) {
+                        if(val < r == 1 && distanceToPoint > minDistance) {
+                            float f = 1.0 - abs((val - (r / 2)) / r);
+                            for(int index = 0; index < _RingPower; index++) {
+                                f *= f;
+                            }
+                            if(_UseFade == 1) {
+                                f /= distanceToPoint / _FadeLength;
+                            }
+                            col += fixed4(f, f, f, 0.0);
                         }
 
-                        float myOffset = _OffsetArray[myIndex];
-                        float mySpeed = _SpeedArray[myIndex];
-
-                        float distanceToPoint = distance(_ImpulseArray[myIndex], i.vw);
-
-                        float maxDistance = (_Time.y - myOffset) * mySpeed;
-                        float minDistance = ((_Time.y - myOffset) * mySpeed) - _Wavelength;
-                        float val = abs(fmod((distanceToPoint - ((_Time.y - myOffset) * mySpeed)), _Wavelength / _Freq) * _Freq);
-                        float r = _RingWidth * _Wavelength;
-                        if(distanceToPoint < maxDistance) {
-                            if(val < r == 1 && distanceToPoint > minDistance) {
-                                float f = 1.0 - abs((val - (r / 2)) / r);
-                                for(int index = 0; index < _RingPower; index++) {
-                                    f *= f;
-                                }
-                                if(_UseFade == 1) {
-                                    f /= distanceToPoint / _FadeLength;
-                                }
-                                col += fixed4(f, f, f, 0.0);
-                            }
-
-                            float diffuseAdd = abs((distanceToPoint - ((_Time.y - myOffset) * mySpeed)) * _Freq);
-                            float fadeGradient = _FadeGradient;
-                            float fadeGradientOffset = _FadeOffset;
-                            if(maxDistance + fadeGradientOffset - distanceToPoint < fadeGradient) {
-                                diffuseAdd *= (maxDistance - distanceToPoint) / fadeGradient;
-                            }
-                            float maxTime = 15.0;
-                            float fadeTime = 10.0;
-                            diffuse = min(1.0, diffuse + max(diffuseAdd * ((fadeTime - (_Time.y - myOffset)) / maxTime), 0.0));
+                        float diffuseAdd = abs((distanceToPoint - ((_Time.y - myOffset) * mySpeed)) * _Freq);
+                        float fadeGradient = _FadeGradient;
+                        float fadeGradientOffset = _FadeOffset;
+                        if(maxDistance + fadeGradientOffset - distanceToPoint < fadeGradient) {
+                            diffuseAdd *= (maxDistance - distanceToPoint) / fadeGradient;
                         }
+                        float maxTime = 15.0;
+                        float fadeTime = 10.0;
+                        diffuse = min(1.0, diffuse + max(diffuseAdd * ((fadeTime - (_Time.y - myOffset)) / maxTime), 0.0));
                     }
                 }
 
@@ -170,6 +151,8 @@ Shader "Unlit/SeismicSense"
                 float diffuseValue = max(dot(nHat, lHat), 0.0);
                 diffuseValue *= _DiffuseIntensity * diffuse;
                 col = col + float4(diffuseValue, diffuseValue, diffuseValue, 0.0);
+
+                col = lerp(_DarkerColor, _LighterColor, col.x);
 
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
