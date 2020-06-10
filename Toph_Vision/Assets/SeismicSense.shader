@@ -7,18 +7,15 @@ Shader "Unlit/SeismicSense"
     Properties
     {
         _MainTex ("Normal Map", 2D) = "white" {}
-        //_ImpulsePoint ("Impulse Point", Vector) = (0, 0, 0)
         _Freq ("Frequencey", Range(0.001, 100)) = 3
         _Wavelength ("Wavelength", Float) = 1.0
         _RingWidth ("Ring Width", Range(0.0001, 1.0)) = 0.25
         _RingPower ("Ring Power", Int) = 2
-        //_Amp ("Amplitude", Float) = 0.05
-        //_Speed ("Speed", Float) = 5.0
         _FadeLength ("Fade Length", Float) = 10
         _UseFade ("Use Fade", Int) = 0
         _DiffuseIntensity ("Diffuse Glow Intensity", Range(0.0, 1.0)) = 0.2
-        //_Switch ("Switch", Int) = 1
-        //_Offset ("Offset", Float) = 0.0
+        _FadeGradient ("Glow Fade Gradient", Float) = 500.0
+        _FadeOffset ("Glow Fade Offset", Float) = 40.0
     }
     SubShader
     {
@@ -50,8 +47,8 @@ Shader "Unlit/SeismicSense"
                 float2 uv : TEXCOORD0;
                 UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
+                float4 vw : COLOR11;
                 float1 distanceToPoint : TEXCOORD1;
-                //fixed4 diffuse : COLOR0;
                 fixed4 lightDirection : COLOR0;
                 float4 distanceArray[10] : COLOR1;
                 float4 normal : NORMAL;
@@ -71,6 +68,8 @@ Shader "Unlit/SeismicSense"
             float _DiffuseIntensity;
             int _Switch;
             float _Offset;
+            float _FadeGradient;
+            float _FadeOffset;
 
             float3 _ImpulseArray[40];
             float _SwitchArray[40];
@@ -81,13 +80,10 @@ Shader "Unlit/SeismicSense"
             {
                 float3 xyzPos = mul(unity_ObjectToWorld, v.vertex).xyz;
                 float dist = distance(_ImpulsePoint, xyzPos);
-                ////float wave = abs(sin(_Freq * (dist - (_Time.x * _Speed))));
-                ////wave *= wave * wave * wave;
-                ////xyzPos += float3(0.0, _Amp * wave, 0.0);
-                ////float4 newPos = mul(unity_WorldToObject, float4(xyzPos.xyz, 1.0));
 
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
+                o.vw = mul(unity_ObjectToWorld, v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.distanceToPoint = float1(dist);
                 UNITY_TRANSFER_FOG(o,o.vertex);
@@ -107,7 +103,6 @@ Shader "Unlit/SeismicSense"
                 }
                 o.distanceArray = distanceArray;
                 
-                //o.diffuse = float4(diffuseValue, diffuseValue, diffuseValue, 1.0);
                 o.lightDirection = _WorldSpaceLightPos0;
                 o.normal = float4(UnityObjectToWorldNormal(v.normal).x, UnityObjectToWorldNormal(v.normal).y, UnityObjectToWorldNormal(v.normal).z, 1.0);
 
@@ -139,7 +134,7 @@ Shader "Unlit/SeismicSense"
                         float myOffset = _OffsetArray[myIndex];
                         float mySpeed = _SpeedArray[myIndex];
 
-                        float distanceToPoint = points[m];
+                        float distanceToPoint = distance(_ImpulseArray[myIndex], i.vw);
 
                         float maxDistance = (_Time.y - myOffset) * mySpeed;
                         float minDistance = ((_Time.y - myOffset) * mySpeed) - _Wavelength;
@@ -157,15 +152,15 @@ Shader "Unlit/SeismicSense"
                                 col += fixed4(f, f, f, 0.0);
                             }
 
-                            float diffuseAdd = abs((distanceToPoint - ((_Time.y - myOffset) * mySpeed), 5 * _Wavelength / _Freq) * _Freq);
-                            float fadeGradient = 100.0;
-                            float fadeGradientOffset = 40.0;
+                            float diffuseAdd = abs((distanceToPoint - ((_Time.y - myOffset) * mySpeed)) * _Freq);
+                            float fadeGradient = _FadeGradient;
+                            float fadeGradientOffset = _FadeOffset;
                             if(maxDistance + fadeGradientOffset - distanceToPoint < fadeGradient) {
                                 diffuseAdd *= (maxDistance - distanceToPoint) / fadeGradient;
                             }
-                            float maxTime = 7.0;
-                            float fadeTime = 5.0;
-                            diffuse = min((fadeTime - (_Time.y - myOffset)) / maxTime, diffuse + diffuseAdd);
+                            float maxTime = 15.0;
+                            float fadeTime = 10.0;
+                            diffuse = min(1.0, diffuse + max(diffuseAdd * ((fadeTime - (_Time.y - myOffset)) / maxTime), 0.0));
                         }
                     }
                 }
