@@ -18,6 +18,7 @@ public class Whee : MonoBehaviour
         print("First normal of the point that collide: " + other.contacts[0].normal);
 
         Vector4 location = transform.position;
+        location = other.contacts[0].point;
 
         Debug.Log(other.relativeVelocity.magnitude);
 
