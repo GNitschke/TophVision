@@ -4,6 +4,7 @@ A project by Ian Horning and Gram Nitschke to replicate the seismic sense abilit
 Instructions:
 Click to create one source for the effect, press space to launch an object which will create a source everywhere there is a collision.
 Hold right click to rotate the camera and use WASD to move the camera around in space.
+Press TAB to switch between two areas.
 
 Examples in the shows:
 
