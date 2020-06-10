@@ -337,7 +337,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!23 &113804380
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -500,6 +500,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: monke
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 1fede562f9b0aab47a218a932c831163,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1fede562f9b0aab47a218a932c831163, type: 3}
 --- !u!1 &145355914
@@ -520,7 +525,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &145355915
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -589,13 +594,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 145355914}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.93, y: -1.79, z: 2.203805}
-  m_LocalScale: {x: 20, y: 20, z: 20}
+  m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
+  m_LocalPosition: {x: 3.5, y: 35.6, z: 14.7}
+  m_LocalScale: {x: 62.442, y: 62.442, z: 62.442}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 180, y: 0, z: 0}
 --- !u!1 &161767043 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 334586307858616193, guid: e70e8b0f0c8dc9144a72f4583af157ba,
@@ -674,7 +679,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!23 &402693573
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -981,6 +986,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: sphere
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 4f096c5eb7fe68e4da026744cbaed5c1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4f096c5eb7fe68e4da026744cbaed5c1, type: 3}
 --- !u!1001 &949835693
@@ -1154,6 +1164,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: monke1
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: bec68dc3013ce4d4e8ac726d48d549cd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bec68dc3013ce4d4e8ac726d48d549cd, type: 3}
 --- !u!1001 &990200266
@@ -1226,17 +1241,17 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: e70e8b0f0c8dc9144a72f4583af157ba,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 3.6163
+      value: 8.840405
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: e70e8b0f0c8dc9144a72f4583af157ba,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 3.6163
+      value: 8.840405
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: e70e8b0f0c8dc9144a72f4583af157ba,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 3.6163
+      value: 8.840405
       objectReference: {fileID: 0}
     - target: {fileID: -2397996973257786244, guid: e70e8b0f0c8dc9144a72f4583af157ba,
         type: 3}
@@ -1443,8 +1458,8 @@ Camera:
   m_GameObject: {fileID: 1320561471}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1485,7 +1500,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1320561471}
   m_LocalRotation: {x: 0.07767235, y: -0, z: -0, w: 0.99697894}
-  m_LocalPosition: {x: 4.75, y: 6.69, z: -8.24}
+  m_LocalPosition: {x: 4.75, y: 19, z: -13.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1722,13 +1737,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1731458232}
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &1821911781 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4695666576454475813, guid: e70e8b0f0c8dc9144a72f4583af157ba,
@@ -1855,6 +1870,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: sphere (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 4f096c5eb7fe68e4da026744cbaed5c1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4f096c5eb7fe68e4da026744cbaed5c1, type: 3}
