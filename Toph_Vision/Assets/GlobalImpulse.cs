@@ -11,6 +11,8 @@ public class GlobalImpulse : MonoBehaviour
 	public static float[] switches;
 	public static int impulsePointsIndex = 0;
 
+	public static Camera currentCam;
+
 	static GlobalImpulse() {
 		impulsePoints = new Vector4[1000];
 		offsets = new float[1000];
@@ -22,6 +24,8 @@ public class GlobalImpulse : MonoBehaviour
 			speeds[i] = 0f;
 			switches[i] = 0f;
 		}
+
+		currentCam = Camera.main;
 	}
 
     // Start is called before the first frame update

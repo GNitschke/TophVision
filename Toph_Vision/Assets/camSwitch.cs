@@ -16,11 +16,13 @@ public class camSwitch : MonoBehaviour
             {
                 Cam1.SetActive(false);
                 Cam2.SetActive(true);
+                GlobalImpulse.currentCam = Cam2.GetComponent<Camera>();
             }
             else
             {
                 Cam2.SetActive(false);
                 Cam1.SetActive(true);
+                GlobalImpulse.currentCam = Cam1.GetComponent<Camera>();
             }
         }
     }

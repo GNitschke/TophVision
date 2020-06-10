@@ -79,7 +79,7 @@ Material:
     - _GlossyReflections: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
-    - _Offset: 121.52621
+    - _Offset: 0.1625661
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _RingPower: 5
