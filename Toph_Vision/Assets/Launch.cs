@@ -9,7 +9,7 @@ public class Launch : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetKeyUp(KeyCode.Space))
         {
             GameObject p = Instantiate(projectile, transform.position, projectile.transform.rotation);
             p.GetComponent<Rigidbody>().AddForce(transform.forward * strength);
