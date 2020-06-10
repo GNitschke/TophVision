@@ -2,6 +2,7 @@
 A project by Ian Horning and Gram Nitschke to replicate the seismic sense ability featured in Avatar the Last Airbender and Legend of Korra
 
 Examples in the shows:
+
 ![](gifs/inBox.gif)
 ![](gifs/inArena.gif)
 ![](gifs/lin.gif)
